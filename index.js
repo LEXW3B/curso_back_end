@@ -29,7 +29,7 @@ async function main() {
   // Read All - GET /herois
   app.get("/herois", async (_req, res) => {
     const itens = await collection.find().toArray();
-    res.send(itens); // para retirar os itens vazios(null)
+    res.send(itens);
   });
 
   // Read Single - GET /herois/:id
@@ -40,11 +40,10 @@ async function main() {
   });
 
   // Create - POST /herois
-  app.post("/herois", (req, res) => {
-    const heroi = req.body.nome;
-    lista.push(heroi);
-    // console.log(req.body, typeof req.body);
-    res.send("Heroi adicionado com sucesso!");
+  app.post("/herois", async (req, res) => {
+    const heroi = req.body;
+    await collection.insertOne(heroi);
+    res.send(heroi);
   });
 
   // Update - PUT /herois/:id
