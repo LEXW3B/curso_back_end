@@ -23,9 +23,6 @@ async function main() {
     res.send('Hello World!');
   });
 
-  // Endpoint de heroi
-  const lista = ["Mulher Maravilha", "Capitã Marvel", "Homen de Ferro"];
-
   // Read All - GET /herois
   app.get("/herois", async (_req, res) => {
     const itens = await collection.find().toArray();
@@ -47,17 +44,20 @@ async function main() {
   });
 
   // Update - PUT /herois/:id
-  app.put("/herois/:id", (req, res) => {
-    const id = req.params.id - 1;
-    const heroi = req.body.nome;
-    lista[id] = heroi;
-    res.send(`Heroi atualizado com sucesso!`);
+  app.put("/herois/:id", async (req, res) => {
+    const id = req.params.id;
+    const heroi = req.body;
+    await collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: heroi },
+    );
+    res.send(heroi);
   });
 
   // Delete - DELETE /herois/:id
-  app.delete("/herois/:id", (req, res) => {
-    const id = req.params.id - 1;
-    delete lista[id];
+  app.delete("/herois/:id", async (req, res) => {
+    const id = req.params.id;
+    await collection.deleteOne({ _id: new ObjectId(id) });
     res.send(`Heroi removido com sucesso!`);
   });
 
