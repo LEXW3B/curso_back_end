@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 
 const url = 'mongodb://localhost:27017';
 const dbName = 'jornada-back-end-2023';
@@ -33,9 +33,9 @@ async function main() {
   });
 
   // Read Single - GET /herois/:id
-  app.get("/herois/:id", (req, res) => {
-    const id = req.params.id - 1;
-    const heroi = lista[id];
+  app.get("/herois/:id", async (req, res) => {
+    const id = req.params.id;
+    const heroi = await collection.findOne({ _id: new ObjectId(id) })
     res.send(heroi);
   });
 
