@@ -1,52 +1,70 @@
-
 const express = require('express');
-const app = express();
-// Habiulitar o uso de JSON
-app.use(express.json());
-const port = 3000;
+const { MongoClient } = require('mongodb');
 
-app.get('/', (_req, res) => {
-  res.send('Hello World!');
-});
+const url = 'mongodb://localhost:27017';
+const dbName = 'jornada-back-end-2023';
+const client = new MongoClient(url);
 
-// Endpoint de heroi
-const lista = ["Mulher Maravilha", "Capitã Marvel", "Homen de Ferro"];
+async function main() {
+  console.info('Conectando ao banco de dados...');
+  await client.connect();
+  console.info('Bando de dados conectado com sucesso!');
 
-// Read All - GET /herois
-app.get("/herois", (_req, res) => {
-  res.send(lista);
-});
+  const db = client.db(dbName);
+  const collection = db.collection('herois');
 
-// Read Single - GET /herois/:id
-app.get("/herois/:id", (req, res) => {
-  const id = req.params.id - 1;
-  const heroi = lista[id];
-  res.send(heroi);
-});
 
-// Create - POST /herois
-app.post("/herois", (req, res) => {
-  const heroi = req.body.nome;
-  lista.push(heroi);
-  // console.log(req.body, typeof req.body);
-  res.send("Heroi adicionado com sucesso!");
-});
+  const app = express();
+  // Habiulitar o uso de JSON
+  app.use(express.json());
+  const port = 3000;
 
-// Update - PUT /herois/:id
-app.put("/herois/:id", (req, res) => {
-  const id = req.params.id - 1;
-  const heroi = req.body.nome;
-  lista[id] = heroi;
-  res.send(`Heroi atualizado com sucesso!`);
-});
+  app.get('/', (_req, res) => {
+    res.send('Hello World!');
+  });
 
-// Delete - DELETE /herois/:id
-app.delete("/herois/:id", (req, res) => {
-  const id = req.params.id - 1;
-  delete lista[id];
-  res.send(`Heroi removido com sucesso!`);
-});
+  // Endpoint de heroi
+  const lista = ["Mulher Maravilha", "Capitã Marvel", "Homen de Ferro"];
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhos: ${port}`);
-});
+  // Read All - GET /herois
+  app.get("/herois", async (_req, res) => {
+    const itens = await collection.find().toArray();
+    res.send(itens); // para retirar os itens vazios(null)
+  });
+
+  // Read Single - GET /herois/:id
+  app.get("/herois/:id", (req, res) => {
+    const id = req.params.id - 1;
+    const heroi = lista[id];
+    res.send(heroi);
+  });
+
+  // Create - POST /herois
+  app.post("/herois", (req, res) => {
+    const heroi = req.body.nome;
+    lista.push(heroi);
+    // console.log(req.body, typeof req.body);
+    res.send("Heroi adicionado com sucesso!");
+  });
+
+  // Update - PUT /herois/:id
+  app.put("/herois/:id", (req, res) => {
+    const id = req.params.id - 1;
+    const heroi = req.body.nome;
+    lista[id] = heroi;
+    res.send(`Heroi atualizado com sucesso!`);
+  });
+
+  // Delete - DELETE /herois/:id
+  app.delete("/herois/:id", (req, res) => {
+    const id = req.params.id - 1;
+    delete lista[id];
+    res.send(`Heroi removido com sucesso!`);
+  });
+
+  app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhos: ${port}`);
+  });
+}
+
+main();
