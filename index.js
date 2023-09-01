@@ -2,7 +2,7 @@ const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 
 // const url = 'mongodb://localhost:27017';
-const url = "'mongodb+srv://admin:nk7tFlssxS6vi8np@cluster0.fqyldgm.mongodb.net';";
+const url = "mongodb+srv://admin:nk7tFlssxS6vi8np@cluster0.fqyldgm.mongodb.net";
 const dbName = 'jornada-back-end-2023';
 const client = new MongoClient(url);
 
