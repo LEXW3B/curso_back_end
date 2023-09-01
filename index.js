@@ -1,7 +1,8 @@
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 
-const url = 'mongodb://localhost:27017';
+// const url = 'mongodb://localhost:27017';
+const url = "'mongodb+srv://admin:nk7tFlssxS6vi8np@cluster0.fqyldgm.mongodb.net';";
 const dbName = 'jornada-back-end-2023';
 const client = new MongoClient(url);
 
@@ -17,7 +18,7 @@ async function main() {
   const app = express();
   // Habiulitar o uso de JSON
   app.use(express.json());
-  const port = 3000;
+  const port = process.env.PORT || 3000;
 
   app.get('/', (_req, res) => {
     res.send('Hello World!');
