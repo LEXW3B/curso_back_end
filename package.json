@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "Um mini curso de back end usando nodeJs",
   "main": "index.js",
+  "engines": {
+
+    "node": ">=16"
+
+  },
   "scripts": {
     "start": "node .",
     "dev": "nodemon index.js",
